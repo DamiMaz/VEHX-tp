@@ -37,3 +37,9 @@ ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 .DS_Store
+
+# Excluded documents, prompts, and extracted text
+*.pdf
+[Pp]rompt*.md
+pdf_extracted_text.txt
+
