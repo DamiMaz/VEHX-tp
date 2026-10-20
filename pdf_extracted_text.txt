@@ -1,0 +1,290 @@
+=== PAGE 1 ===
+DOCUMENTO DE ESPECIFICACIÓN DE PRODUCTO & ARQUITECTURA (PRD)
+Sistema de Gestión Vehicular, Matrices de
+Combustible y Telemetría de Movimiento
+Requerimientos funcionales, modelo de datos, algoritmos de consumo, mantenimiento preventivo y diseño
+de APIs externas
+Este documento establece las bases técnicas y funcionales para el desarrollo de una aplicación móvil
+enfocada en la administración integral de automóviles. El sistema resuelve dos problemáticas críticas de
+los conductores: la trazabilidad financiera y operativa del consumo de nafta mediante matrices
+comparativas mensuales, y la gestión predictiva de mantenimientos mecánicos (services) combinando
+registros de carga con estimación de kilometraje diario mediante APIs de movimiento y telemetría.
+01. Requerimientos Funcionales Core
+1. Gestión de Garaje Multi-Vehículo
+Permite registrar uno o múltiples rodados con su
+ficha técnica base: marca, modelo, año,
+motorización (Nafta, Diésel, GNC, Híbrido),
+capacidad del tanque, tipo de transmisión y
+kilometraje inicial de partida.
+2. Registro de Cargas y Odómetro
+Captura ágil en estación de servicio de odómetro
+actual, litros surtidos, costo monetario e indicador
+de tanque lleno. Calcula el tramo recorrido desde
+la carga inmediata anterior y el rendimiento real.
+3. Matrices Mensuales de Consumo
+Agrupación automática de cargas por mes
+calendario y año. Consolida distancia recorrida,
+volumen de combustible, erogación total, costo por
+kilómetro y variaciones porcentuales
+intermensuales.
+4. Motor Predictivo de Services
+Planificador con lógica bimodal (por kilometraje
+acumulado o tiempo calendario). Se alimenta tanto
+de las cargas de nafta como del rastreo pasivo de
+movimiento por APIs para emitir alertas
+preventivas.
+02. Requerimientos No Funcionales y de Operación
+Estándares de Arquitectura Móvil, Usabilidad y Consumo de Batería
+Arquitectura Offline-First: En estaciones de servicio o cocheras subterráneas la conectividad
+suele ser nula. La aplicación debe persistir registros en una base de datos local (SQLite) y
+sincronizar en segundo plano al recuperar red.
+Experiencia de Carga en 15 Segundos (UX): Interfaz de alto contraste operable con una sola
+mano, teclado numérico directo al abrir el formulario y autocompletado del precio por litro según
+la última carga o geolocalización.
+Eficiencia Energética en Sensores: El rastreo de movimiento diario no debe utilizar GPS
+continuo en alta precisión; debe apoyarse en APIs nativas de reconocimiento de actividad
+vehicular de bajo consumo energético.
+Especificación Técnica: App de Gestión Vehicular Página 1 de 5
+
+=== PAGE 2 ===
+03. Estructura de Datos y Cargas del Usuario
+La captura de información se organiza en cuatro entidades principales que vinculan las entradas
+manuales del conductor con los registros automáticos generados por los sensores del teléfono y APIs
+externas:
+Módulo / Entidad Campos Requeridos (Obligatorios) Campos Opcionales / Automáticos
+1. Perfil del Vehículo
+Carga Única
+Marca, Modelo, Año, Combustible
+principal, Odómetro inicial (km),
+Capacidad del tanque (L).
+Patente/Dominio, Transmisión (Manual/AT),
+Distribución (Correa/Cadena), Número de
+chasis (VIN).
+2. Carga de Nafta
+Recurrente
+Odómetro actual (km), Litros cargados,
+Costo total ($) o Precio/Litro, Switch
+"¿Tanque lleno?".
+Fecha/Hora, Coordenadas GPS de estación,
+Grado de combustible (Súper/Premium),
+Foto del ticket.
+3. Service Automotriz
+Periódico
+Ítem intervenido (Aceite, Filtros, Frenos,
+etc.), Odómetro del service, Fecha, Costo
+total ($).
+Intervalo próximo sugerido (km/meses),
+Nombre del taller, Marca de repuestos,
+Factura adjunta.
+4. Telemetría Diaria
+Automático API
+Fecha, Distancia estimada en segundo
+plano (km), Confianza de detección
+vehicular (%).
+Tiempo en movimiento (min), Velocidad
+media, Origen de lectura (Motion API /
+Bluetooth / OBD2).
+04. Algoritmo de Consumo y Cargas Parciales
+El cálculo de rendimiento exige conocer exactamente cuántos litros reemplazaron el volumen consumido.
+El sistema aplica la siguiente formulación matemática entre la carga anterior (i−1) y la actual (i):
+Distancia_Tramo (Δkm) = Odómetro[i] − Odómetro[i−1]
+Rendimiento_Real (km/L) = (Odómetro[i] − Odómetro[último_lleno]) / ∑
+Litros[parciales + actual]
+Costo_Por_Kilómetro ($/km) = Gasto_Total_Acumulado / Distancia_Tramo
+Resolución Técnica del Problema de "Carga Parcial"
+Si el usuario carga $15.000 (ej. 12 litros) sin llenar el tanque, es físicamente imposible saber cuánta
+nafta gastó en los kilómetros previos porque el nivel final del tanque es incierto. Regla de negocio:
+Cuando el usuario desmarca "¿Tanque lleno?", el sistema registra los litros y el importe para la
+matriz contable del mes, pero marca el rendimiento como "Acumulando...". En la siguiente ocasión
+en que el usuario llene el tanque al 100%, el motor suma todos los litros parciales intermedios y los
+divide por la diferencia de odómetro respecto al último tanque lleno validado.
+Especificación Técnica: App de Gestión Vehicular Página 2 de 5
+
+=== PAGE 3 ===
+05. Estructura de la Matriz Mensual de Nafta
+El módulo de analítica procesa los registros individuales y construye una matriz de doble entrada por año
+calendario. Esto permite detectar desvíos de presupuesto, inflación del combustible o mermas mecánicas
+de rendimiento:
+Mes /
+Período
+Distancia
+(km)
+Volumen
+(L)
+Cargas
+(#)
+Gasto
+Total ($)
+Costo
+($/km) Rendimiento Desvío vs.
+Promedio
+Enero 1.320 km 114,8 L 3 (3
+llenos)
+$137.760 $104,36
+/km
+11,50 km/L Base referencia
+Febrero 980 km 91,6 L 3 (1
+parcial)
+$114.500 $116,83
+/km
+10,70 km/L −7,0% (Mayor
+uso urbano)
+Marzo 1.650 km 132,0 L 4 (4
+llenos)
+$168.960 $102,40
+/km
+12,50 km/L +8,7% (Tramo
+en ruta)
+Abril 1.110 km 108,8 L 3 (2
+llenos)
+$141.440 $127,42
+/km
+10,20 km/L −11,3% (Revisar
+presión)
+Total /
+Prom. Q1
+5.060 km 447,2 L 13
+cargas
+$562.660 $111,19
+/km
+11,31 km/L Consolidado
+Cuatrimestral
+06. Motor de Reglas para Services (Desgaste Bimodal)
+Las piezas y fluidos de un automóvil sufren degradación tanto por fricción mecánica (kilómetros) como
+por oxidación química y envejecimiento de polímeros (tiempo). El sistema evalúa una condición lógica
+OR donde el alerta salta ante el primer umbral que llegue al 90% de su vida útil:
+ACEITE Y FILTROS
+10.000 km
+ó 12 meses (Sintético/Semi)
+KIT DE DISTRIBUCIÓN
+60.000 km
+ó 48 meses (Correa dentada)
+LÍQUIDO FRENOS / BUJÍAS
+40.000 km
+ó 24 meses (Higroscopía)
+Cálculo del Índice de Desgaste y Predicción de Fecha de Service
+Para cada componente k, el sistema calcula el porcentaje de desgaste actual como el máximo
+entre la fracción de kilómetros recorridos y la fracción de días transcurridos desde el último service:
+Desgaste(k) = MÁX [ (Odómetro_Estimado − Km_Último_Service) /
+Intervalo_Km , (Fecha_Hoy − Fecha_Último_Service) / Intervalo_Días ]
+Si el usuario pasa 3 semanas sin cargar combustible (por ejemplo, en tanques grandes o vehículos
+diésel), depender únicamente del odómetro manual atrasaría las alertas. Aquí interviene el módulo
+de APIs de control de movimiento para actualizar el Odómetro Estimado todos los días en
+segundo plano.
+Especificación Técnica: App de Gestión Vehicular Página 3 de 5
+
+=== PAGE 4 ===
+07. Integración de APIs Externas: Movimiento y Telemetría
+Para determinar el Ritmo Diario de Uso (km/día) y proyectar el kilometraje real del vehículo entre cargas
+de nafta sin exigir intervención manual del conductor, la aplicación implementa una arquitectura híbrida
+de APIs externas y sensores del sistema operativo móvil:
+1. DETECCIÓN DE VIAJE
+Activity Recognition API
++ Vínculo Bluetooth Auto
+Estado: IN_VEHICLE
+(Consumo batería < 2%)
+2. TRAZADO DE RUTA
+Fused Location Provider
+Google Roads / Mapbox API
+(Snap-to-Road & Distance)
+Calcula: Δkm_diario
+3. ODÓMETRO VIRTUAL
+Suma diaria en Background
+Evalúa Ritmo (ej. 42 km/día)
+Dispara Push Notification
+si Service < 10 días
+4. CALIBRACIÓN
+Carga de Nafta Real
+Usuario ingresa tablero
+Corrige desvío GPS y
+recalibra factor α
+Figura 1: Pipeline de adquisición pasiva de movimiento, proyección de odómetro virtual y recalibración con carga de
+combustible.
+A. Control de Movimiento y Ritmo Diario (Dead Reckoning + Calibración)
+¿Cómo saber que el usuario viaja en SU auto y no en taxi, colectivo o en otro vehículo?
+Google Activity Recognition API / Apple CMMotionActivityManager: Detectan mediante
+acelerómetro y giroscopio cuando el teléfono pasa a estado IN_VEHICLE sin activar el chip
+GPS permanentemente.
+Filtro por MAC Bluetooth / Android Auto / CarPlay: Para evitar sumar kilómetros cuando el
+usuario viaja en transporte público, el conteo automático se activa únicamente si el teléfono
+detecta simultáneamente el estado IN_VEHICLE y la conexión al Bluetooth del estéreo del auto
+registrado.
+Mapbox Map Matching / Google Roads API: Durante el trayecto toma muestras espaciadas de
+ubicación (cada 60–120 segundos via FusedLocationProvider) y las ajusta a la traza vial real,
+calculando los kilómetros diarios recorridos.
+Fórmula de Odómetro Virtual Autocalibrado
+El kilometraje estimado hoy es: Odómetro_Virtual(t) = Odómetro_Última_Nafta + ∑ (Km_API_Diarios ×
+Factor_Corrección_α). Cuando el usuario carga nafta e ingresa el odómetro real del tablero, el sistema
+compara su estimación con la realidad, corrige el valor exacto y ajusta el coeficiente α para mayor precisión
+futura.
+Especificación Técnica: App de Gestión Vehicular Página 4 de 5
+
+=== PAGE 5 ===
+08. Catálogo de APIs Externas Complementarias
+Además del control de movimiento, el ecosistema de la aplicación se potencia conectando servicios de
+terceros para automatizar la carga de datos y enriquecer el diagnóstico vehicular:
+Categoría de Servicio APIs / Proveedores Recomendados Caso de Uso en la Aplicación
+Reconocimiento de
+Tickets (OCR + IA)
+Google Cloud Vision API, AWS
+Textract o Gemini Flash Vision API.
+Lectura automática de foto del surtidor/ticket y
+foto del tablero para extraer litros, importe total
+y odómetro sin tipear.
+Precios Oficiales de
+Combustible
+API de Datos Abiertos de Energía
+(Surtidores/Precios en Surtidor) +
+Google Places.
+Sugerir el precio por litro vigente según la
+bandera de la estación (YPF, Shell, Axion,
+Puma) donde está parado el usuario.
+Catálogo Vehicular y
+Decodificación VIN
+CarQuery API, NHTSA VIN Decoder
+API o base propia normalizada.
+Autocompletar capacidad del tanque, tipo de
+aceite (ej. 5W-30) y plan de mantenimiento
+oficial al elegir marca, modelo y año.
+Telemetría de Puerto
+OBD-II
+Protocolo ELM327 (Bluetooth BLE) o
+Smartcar API (autos conectados).
+Lectura directa desde la computadora del auto
+(ECU): odómetro exacto, nivel de tanque en %,
+temperatura y códigos de falla (Check Engine).
+Clima y Tráfico en Ruta OpenWeatherMap API + TomTom
+Traffic API.
+Correlacionar picos de consumo en la matriz
+mensual con uso intensivo de aire
+acondicionado en verano o embotellamientos
+severos.
+09. Ampliaciones del Producto y Hoja de Ruta (Roadmap)
+Fase 1: MVP (Meses 1 a 2)
+Alta de vehículos, carga manual rápida de nafta
+(con lógica de tanque lleno/parcial), generación de
+la matriz mensual comparativa, alertas base de
+services y persistencia Offline-First.
+Fase 2: Movimiento y OCR (Meses 3 a 4)
+Integración de Activity Recognition API + vínculo
+Bluetooth para estimar el ritmo diario de kilómetros
+en segundo plano. Escaneo de tickets de
+combustible mediante cámara e IA.
+Fase 3: Gestión Documental y Anomalías
+Alertas por vencimiento de VTV/ITV, póliza de
+seguro, oblea de GNC, matafuegos y patentes.
+Detector estadístico de fallas si el rendimiento cae
+más de un 15% respecto al histórico.
+Fase 4: Pasaporte Vehicular y Flotas B2B
+Exportación de "Certificado de Historial de
+Mantenimiento" en PDF para aumentar el valor de
+reventa del usado. Panel web para pequeñas flotas
+de remises, utilitarios o logística.
+Stack Tecnológico Recomendado para el Inicio del Proyecto
+Frontend Multiplataforma: Flutter o React Native (con módulos nativos para Background Location
+y Bluetooth). Base de Datos Local: SQLite (mediante Drift o WatermelonDB) para operación sin
+señal. Backend y Sincronización: Supabase (PostgreSQL + Auth + Edge Functions) para
+resguardar copias de seguridad en la nube y ejecutar los cálculos programados de alertas push
+(Firebase Cloud Messaging).
+Especificación Técnica: App de Gestión Vehicular Página 5 de 5
+

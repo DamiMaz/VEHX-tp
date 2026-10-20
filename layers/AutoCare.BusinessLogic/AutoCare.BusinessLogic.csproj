@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoCare.DataAccess\AutoCare.DataAccess.csproj" />
+    <ProjectReference Include="..\AutoCare.Entities\AutoCare.Entities.csproj" />
+    <ProjectReference Include="..\..\core\AutoCare.Core\AutoCare.Core.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
