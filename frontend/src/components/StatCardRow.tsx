@@ -29,9 +29,9 @@ export const StatCardRow: React.FC = () => {
   const barHeights = [40, 65, 50, 85, 70, 95];
 
   return (
-    <div className="grid grid-cols-3 gap-2 mx-4 mb-4 select-none">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 select-none">
       {/* 1. Tarjeta Avg. Fuel km/L con sparkline Amber */}
-      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between">
+      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between min-h-[102px]">
         <div className="flex items-center justify-between mb-1">
           <span className="text-[9px] font-bold text-text-secondary uppercase">
             {t('statFuelAvg')}
@@ -40,7 +40,7 @@ export const StatCardRow: React.FC = () => {
         </div>
 
         <div>
-          <div className="text-base sm:text-lg font-extrabold text-text-primary tracking-tight">
+          <div className="text-base font-extrabold text-text-primary tracking-tight">
             {avgEfficiency}
           </div>
           <span className="text-[9px] text-text-secondary">{t('kmUnit')}/L</span>
@@ -68,7 +68,7 @@ export const StatCardRow: React.FC = () => {
       </div>
 
       {/* 2. Tarjeta Drive Time This Month con mini bar chart Tanned Wood */}
-      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between">
+      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between min-h-[102px]">
         <div className="flex items-center justify-between mb-1">
           <span className="text-[9px] font-bold text-text-secondary uppercase">
             {t('statDriveTime')}
@@ -77,7 +77,7 @@ export const StatCardRow: React.FC = () => {
         </div>
 
         <div>
-          <div className="text-base sm:text-lg font-extrabold text-text-primary tracking-tight">
+          <div className="text-base font-extrabold text-text-primary tracking-tight">
             42 <span className="text-[10px] font-normal text-text-secondary">{t('hrsUnit')}</span>
           </div>
           <span className="text-[9px] text-text-secondary">{t('statThisMonth')}</span>
@@ -97,7 +97,7 @@ export const StatCardRow: React.FC = () => {
       </div>
 
       {/* 3. Tarjeta Drive Score con badge Eco y hoja en Amber */}
-      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between">
+      <div className="p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all flex flex-col justify-between min-h-[102px]">
         <div className="flex items-center justify-between mb-1">
           <span className="text-[9px] font-bold text-text-secondary uppercase">
             {t('statDriveScore')}

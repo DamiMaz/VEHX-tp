@@ -30,37 +30,39 @@ export const FuelMatrixView: React.FC = () => {
   const avgCostPerKmGlobal = totalKm > 0 ? (totalSpend / totalKm).toFixed(2) : '0';
 
   return (
-    <div className="p-3 sm:p-5 space-y-4 max-w-7xl mx-auto select-none">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 space-y-4 select-none">
       {/* Encabezado de la Sección */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-extrabold text-amber-autumn uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] font-extrabold text-amber-autumn uppercase tracking-wider">
               {t('fuelSectionBadge')}
             </span>
-            <span className="text-[10px] bg-carbon px-2 py-0.5 rounded-full border border-tea/50 text-text-secondary">
+            <span className="text-[9px] text-tea">•</span>
+            <span className="text-[9px] bg-carbon px-2 py-0.5 rounded-full border border-tea/50 text-text-secondary font-mono">
               {t('fuelSectionSub')}
             </span>
           </div>
-          <h1 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight mt-0.5">
             {t('fuelTitle')}
           </h1>
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-xs sm:text-sm text-text-secondary mt-0.5">
             {t('fuelSubtitle')}
           </p>
         </div>
 
+        {/* Botón Principal Uniforme */}
         <button
           onClick={() => setIsAddFuelModalOpen(true)}
-          className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-autumn text-river font-extrabold text-xs hover:brightness-110 shadow-amber-glow transition-all w-fit"
+          className="sm:w-auto w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-amber-autumn text-river font-extrabold text-xs sm:text-sm hover:brightness-110 shadow-amber-glow transition-all whitespace-nowrap"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>{t('newFuelBtn')}</span>
         </button>
       </div>
 
       {/* 4 KPIs de Alto Nivel */}
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="p-3 rounded-2xl bg-carbon border border-tea/50">
           <div className="flex items-center justify-between text-[11px] text-text-secondary mb-1">
             <span>{t('kpiTotalSpend')}</span>

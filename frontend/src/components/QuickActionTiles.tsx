@@ -47,19 +47,19 @@ export const QuickActionTiles: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-2 mx-4 mb-4 select-none">
+    <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 select-none">
       {tiles.map((tile) => {
         const Icon = tile.icon;
         return (
           <button
             key={tile.id}
             onClick={tile.action}
-            className="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all pressable-card group focus:outline-none"
+            className="flex flex-col items-center justify-center p-2 rounded-2xl bg-carbon border border-tea/50 hover:border-amber-autumn/40 transition-all pressable-card group focus:outline-none min-h-[76px]"
           >
-            <div className={`w-10 h-10 rounded-xl ${tile.bgColor} border ${tile.borderColor} flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform`}>
+            <div className={`w-9 h-9 rounded-xl ${tile.bgColor} border ${tile.borderColor} flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform shrink-0`}>
               <Icon className={`w-4 h-4 ${tile.iconColor}`} strokeWidth={1.8} />
             </div>
-            <span className="text-[10px] font-semibold text-text-primary text-center leading-tight">
+            <span className="text-[10px] font-semibold text-text-primary text-center leading-tight truncate w-full px-0.5">
               {tile.label}
             </span>
           </button>

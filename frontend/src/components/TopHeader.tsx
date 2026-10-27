@@ -10,7 +10,13 @@ import {
   CheckCircle2,
   AlertTriangle,
   X,
-  Layers
+  Layers,
+  Maximize2,
+  Smartphone,
+  Home,
+  Fuel,
+  Wrench,
+  Radio
 } from 'lucide-react';
 
 export const TopHeader: React.FC = () => {
@@ -18,8 +24,11 @@ export const TopHeader: React.FC = () => {
     vehicle, 
     restoreDemoData, 
     services, 
+    activeTab,
     setActiveTab, 
-    setIsAddFuelModalOpen 
+    setIsAddFuelModalOpen,
+    viewMode,
+    setViewMode 
   } = useVehicle();
 
   const { t } = useLanguage();
@@ -28,6 +37,14 @@ export const TopHeader: React.FC = () => {
 
   // Alertas activas de services (amarillo o rojo)
   const activeAlerts = services.filter(s => s.status !== 'ok');
+
+  const navTabs = [
+    { id: 'home' as const, label: t('tabHome'), icon: Home },
+    { id: 'fuel' as const, label: t('tabFuel'), icon: Fuel },
+    { id: 'services' as const, label: t('tabServices'), icon: Wrench },
+    { id: 'telemetry' as const, label: t('tabTelemetry'), icon: Radio },
+    { id: 'garage' as const, label: t('tabGarage'), icon: Layers },
+  ];
 
   return (
     <header className="relative z-30 bg-carbon border-b border-tea/50 px-3 py-2.5 sm:px-4">
@@ -64,34 +81,61 @@ export const TopHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Lado Derecho: Idioma (ES | EN), Botones Rápidos & Notificaciones */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Selector de Idioma Español / Inglés */}
-          <LanguageToggle />
+        {/* Centro (Desktop): Barra de Navegación de Pestañas en Encabezado */}
+        <nav className="hidden lg:flex items-center gap-1 bg-river/80 p-1 rounded-2xl border border-tea/50">
+          {navTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  isActive
+                    ? 'bg-amber-autumn text-river shadow-amber-glow font-extrabold'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-carbon/50'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-river' : 'text-text-secondary'}`} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </nav>
 
-          {/* Botón rápido "+ Cargar Nafta" */}
+        {/* Lado Derecho: Acciones Rápidas, Modo de Vista, Idioma & Notificaciones */}
+        <div className="flex items-center gap-2">
+          {/* Botón rápido "+ Cargar Nafta" en Desktop */}
           <button
             onClick={() => setIsAddFuelModalOpen(true)}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-autumn text-river font-extrabold text-[11px] hover:brightness-110 transition-all shadow-amber-glow"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-autumn text-river font-bold text-xs hover:brightness-110 shadow-amber-glow transition-all whitespace-nowrap"
             title={t('addFuelQuickBtn')}
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t('addFuelQuickBtn')}</span>
           </button>
 
-          {/* Botón Restaurar Demo */}
+          {/* Toggle Modo: Pantalla Completa / Móvil */}
           <button
-            onClick={() => {
-              if (window.confirm(t('resetConfirm'))) {
-                restoreDemoData();
-              }
-            }}
-            title={t('resetDemoBtn')}
-            className="hidden md:flex items-center gap-1 px-2 py-1.5 rounded-xl text-[11px] text-text-secondary hover:text-amber-autumn hover:bg-river/60 border border-tea/30 transition-all"
+            onClick={() => setViewMode(viewMode === 'desktop-full' ? 'mobile-sim' : 'desktop-full')}
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-river/80 border border-tea/50 hover:border-amber-autumn text-text-secondary hover:text-amber-autumn text-xs font-semibold transition-all whitespace-nowrap"
+            title={viewMode === 'desktop-full' ? 'Cambiar a modo móvil' : 'Cambiar a pantalla completa'}
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>{t('resetDemoBtn')}</span>
+            {viewMode === 'desktop-full' ? (
+              <>
+                <Smartphone className="w-3.5 h-3.5 text-amber-autumn" />
+                <span className="text-[11px] font-medium hidden md:inline">Vista Móvil</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-amber-autumn" />
+                <span className="text-[11px] font-medium hidden md:inline">Pantalla Completa</span>
+              </>
+            )}
           </button>
+
+          {/* Selector de Idioma Español / Inglés */}
+          <LanguageToggle />
 
           {/* Campana de Notificaciones con indicador Amber */}
           <div className="relative">
@@ -201,6 +245,26 @@ export const TopHeader: React.FC = () => {
             </button>
           </div>
           <div className="pt-2 mt-2 border-t border-tea/30 space-y-1">
+            <button
+              onClick={() => {
+                setIsAddFuelModalOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-amber-autumn bg-amber-autumn/10 hover:bg-amber-autumn/20 flex items-center gap-2 transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-autumn" />
+              <span>{t('addFuelQuickBtn')}</span>
+            </button>
+            <button
+              onClick={() => {
+                setViewMode(viewMode === 'desktop-full' ? 'mobile-sim' : 'desktop-full');
+                setIsMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-1.5 rounded-xl text-[11px] text-text-secondary hover:text-amber-autumn hover:bg-river/40 flex items-center gap-2"
+            >
+              {viewMode === 'desktop-full' ? <Smartphone className="w-3.5 h-3.5 text-amber-autumn" /> : <Maximize2 className="w-3.5 h-3.5 text-amber-autumn" />}
+              <span>{viewMode === 'desktop-full' ? 'Cambiar a Vista Móvil' : 'Cambiar a Pantalla Completa'}</span>
+            </button>
             <button
               onClick={() => { 
                 if (window.confirm(t('resetConfirm'))) {

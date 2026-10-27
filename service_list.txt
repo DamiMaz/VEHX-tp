@@ -1,0 +1,141 @@
+### Motor y lubricación
+
+* Cambio de aceite de motor
+* Cambio de filtro de aceite
+* Cambio de filtro de aire del motor
+* Cambio de filtro de combustible
+* Cambio de bujías de encendido
+* Cambio de bujías de precalentamiento (calentadores)
+* Cambio de cables de bujías y bobinas de encendido
+* Cambio de kit de distribución (correa o cadena, tensores y rodillos)
+* Cambio de correa de accesorios (Poly-V) y poleas
+* Limpieza y calibración de inyectores
+* Limpieza del cuerpo de aceleración (mariposa)
+* Limpieza o reemplazo de la válvula PCV
+* Limpieza de la válvula EGR
+* Regulación de luz de válvulas
+* Reemplazo de juntas y retenes (tapa de válvulas, cárter, cigüeñal, árbol de levas)
+* Reemplazo de soportes (tacos) de motor
+* Limpieza interna de motor (flushing)
+* Mantenimiento y limpieza del turbocompresor
+
+### Sistema de refrigeración
+
+* Cambio y purgado de líquido refrigerante / anticongelante
+* Limpieza de radiador y circuito de refrigeración
+* Reemplazo de bomba de agua
+* Reemplazo de termostato
+* Reemplazo de mangueras y abrazaderas del sistema de refrigeración
+* Reemplazo de tapa de radiador o del depósito de expansión
+* Revisión y cambio de electroventilador o polea viscosa
+* Limpieza o reemplazo del radiador de calefacción
+
+### Transmisión y tren motriz
+
+* Cambio de aceite de caja de cambios manual
+* Cambio de fluido de transmisión automática (ATF) y filtro de caja
+* Cambio de kit de embrague (placa, disco y rulemán de empuje)
+* Purgado y cambio de líquido de embrague hidráulico
+* Reemplazo de bomba y bombín de embrague
+* Cambio de aceite de diferencial
+* Cambio de aceite de caja de transferencia (reductora)
+* Reemplazo de fuelles de semiejes (guardapolvos)
+* Engrase y reemplazo de juntas homocinéticas y tricetas
+* Balanceo de cardán y reemplazo de crucetas
+* Reemplazo de soportes (tacos) de caja de cambios
+
+### Sistema de frenos
+
+* Cambio de pastillas de freno
+* Cambio o rectificación de discos de freno
+* Cambio de cintas (zapatas) de freno
+* Cambio o rectificación de campanas (tambores) de freno
+* Cambio y purgado de líquido de frenos
+* Regulación y cambio de cable de freno de mano (estacionamiento)
+* Reemplazo de flexibles (mangueras) y cañerías de freno
+* Reparación o cambio de cilindros de rueda y mordazas (calipers)
+* Reemplazo de bomba de freno
+* Revisión y reemplazo de servofreno
+* Limpieza y calibración de sensores de ABS
+
+### Suspensión y dirección
+
+* Alineación de dirección
+* Balanceo de ruedas
+* Rotación de neumáticos
+* Cambio de neumáticos
+* Cambio de amortiguadores y cazoletas
+* Cambio de espirales (resortes) o elásticos (ballestas)
+* Cambio de parrillas (brazos) de suspensión
+* Cambio de rótulas de suspensión
+* Cambio de bujes de tren delantero y trasero
+* Cambio de bieletas y bujes de barra estabilizadora
+* Cambio de extremos y precaps (axiales) de dirección
+* Cambio de líquido de dirección hidráulica
+* Reparación o reemplazo de caja / cremallera de dirección
+* Cambio de fuelles de cremallera de dirección
+* Cambio o engrase de rodamientos (rulemanes) de maza de rueda
+
+### Sistema eléctrico y electrónico
+
+* Diagnóstico computarizado (escaneo de módulos y borrado de fallas)
+* Control y reemplazo de batería
+* Limpieza y sulfatado de bornes de batería
+* Mantenimiento y reparación de alternador (regulador de voltaje, carbones, rodamientos)
+* Mantenimiento y reparación de motor de arranque (burro de arranque)
+* Reemplazo de lámparas, focos y módulos LED
+* Alineación y regulación de faros delanteros
+* Revisión y reemplazo de fusibles y relés (relays)
+* Limpieza y reemplazo de sensores (oxígeno/sonda lambda, MAF, MAP, CKP, CMP, temperatura)
+* Actualización y reprogramación de software de módulos electrónicos (ECU)
+
+### Climatización y habitáculo
+
+* Cambio de filtro de habitáculo (antipolen / cabina)
+* Carga de gas refrigerante y aceite del compresor de aire acondicionado
+* Detección de fugas y prueba de vacío del sistema de aire acondicionado
+* Reemplazo de filtro deshidratador y válvula de expansión
+* Limpieza de evaporador y desinfección de conductos de ventilación
+* Mantenimiento o reemplazo del compresor de aire acondicionado
+* Limpieza o reemplazo del condensador de aire acondicionado
+
+### Sistema de escape y control de emisiones
+
+* Limpieza o reemplazo de convertidor catalítico (catalizador)
+* Regeneración o limpieza de filtro de partículas (DPF / FAP)
+* Recarga de líquido reductor de emisiones (AdBlue / urea)
+* Reemplazo de silenciadores y resonadores
+* Reparación de fugas y reemplazo de cañerías y juntas de escape
+* Reemplazo de soportes de goma del sistema de escape
+
+### Sistema de combustible y admisión
+
+* Limpieza de tanque de combustible
+* Reemplazo de bomba de combustible y prefiltro
+* Revisión y reemplazo del regulador de presión de combustible
+* Reemplazo de filtro de carbón activado (cánister) y válvula de purga
+* Limpieza de múltiple de admisión
+* Limpieza de intercooler y mangueras de admisión
+
+### Carrocería, visibilidad y chasis
+
+* Cambio de escobillas limpiaparabrisas (delanteras y trasera)
+* Recarga de líquido limpiaparabrisas y destapado de sapitos (pulverizadores)
+* Reparación o cambio de bomba de agua de limpiaparabrisas
+* Lubricación de bisagras, cerraduras, levanta cristales y correderas de asientos
+* Limpieza de desagües de techo corredizo, torpedo y puertas
+* Reemplazo de burletes de puertas, baúl y ventanillas
+* Cambio de amortiguadores de capot y portón trasero
+* Lavado de carrocería, chasis y motor
+* Descontaminado, pulido, encerado y sellado de pintura
+* Pulido de ópticas (faros)
+* Limpieza e hidratación de tapizados e interior
+* Tratamiento anticorrosivo y protección de bajos (subchasis)
+
+### Seguridad pasiva y accesorios
+
+* Revisión del sistema de airbags y pretensores de cinturones de seguridad
+* Revisión de mecanismo de cinturones de seguridad
+* Calibración de cámaras y radares de asistencia a la conducción (ADAS)
+* Calibración y reemplazo de sensores de presión de neumáticos (TPMS)
+* Control de bocina (claxon)

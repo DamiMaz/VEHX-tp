@@ -1,4 +1,4 @@
-import { Vehicle, FuelLog, ServiceItem, ServiceLogRecord } from '../types/vehicle';
+import { Vehicle, FuelLog, ServiceItem, ServiceLogRecord, DailyTripRecord } from '../types/vehicle';
 
 export const INITIAL_VEHICLES: Vehicle[] = [
   {
@@ -14,6 +14,11 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     initialOdometer: 10000,
     currentOdometer: 17480,
     vin: '8AJBA3BE2N0194821',
+    bodyType: 'sedan',
+    model3dPath: '/models/sedan.glb',
+    has3dAnimation: true,
+    bluetoothDeviceName: 'Toyota-BT_4821',
+    bluetoothDeviceId: 'bt-toyota-001',
     createdAt: '2026-04-01T08:00:00.000Z',
   },
   {
@@ -29,37 +34,71 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     initialOdometer: 5000,
     currentOdometer: 28350,
     vin: '8AWBA4BE3N0283419',
+    bodyType: '4x4',
+    model3dPath: '/models/4x4.glb',
+    has3dAnimation: true,
+    bluetoothDeviceName: 'Amarok-Sync_319',
+    bluetoothDeviceId: 'bt-amarok-002',
     createdAt: '2026-02-15T08:00:00.000Z',
   },
   {
     id: 'veh-003',
-    brand: 'Peugeot',
-    model: '208 Feline 1.6 Tiptronic',
-    year: 2021,
-    licensePlate: 'AD 992 MN',
-    fuelType: 'Nafta Súper',
-    tankCapacity: 47,
-    distributionType: 'Correa',
+    brand: 'Toyota',
+    model: 'RAV4 Hybrid Limited AWD',
+    year: 2023,
+    licensePlate: 'AF 620 HY',
+    fuelType: 'Híbrido',
+    tankCapacity: 55,
+    distributionType: 'Cadena',
     transmission: 'Automática',
-    initialOdometer: 12000,
-    currentOdometer: 34100,
-    vin: '8AFBA2BE1N0391823',
+    initialOdometer: 8000,
+    currentOdometer: 22400,
+    vin: '8AJBA2BE1N0391823',
+    bodyType: 'suv',
+    model3dPath: '/models/suv.glb',
+    has3dAnimation: true,
+    bluetoothDeviceName: 'RAV4-CarPlay_620',
+    bluetoothDeviceId: 'bt-rav4-003',
     createdAt: '2026-01-10T08:00:00.000Z',
   },
   {
     id: 'veh-004',
-    brand: 'Toyota',
-    model: 'Hilux GR-Sport IV 4x4',
+    brand: 'Ford',
+    model: 'Ranger Raptor 4x4 V6',
     year: 2024,
-    licensePlate: 'AF 410 ZZ',
-    fuelType: 'Diésel',
+    licensePlate: 'AG 550 RP',
+    fuelType: 'Nafta Premium',
     tankCapacity: 80,
     distributionType: 'Cadena',
     transmission: 'Automática',
-    initialOdometer: 1000,
-    currentOdometer: 12600,
+    initialOdometer: 1200,
+    currentOdometer: 8900,
     vin: '8AJBA5BE4N0410982',
+    bodyType: '4x4',
+    model3dPath: '/models/4x4.glb',
+    has3dAnimation: true,
+    bluetoothDeviceName: 'Ford-SYNC4_Raptor',
+    bluetoothDeviceId: 'bt-raptor-004',
     createdAt: '2026-05-20T08:00:00.000Z',
+  },
+  {
+    id: 'veh-005',
+    brand: 'Fiat',
+    model: 'Cronos 1.3 GSE Drive',
+    year: 2023,
+    licensePlate: 'AF 912 ZZ',
+    fuelType: 'Nafta Súper',
+    tankCapacity: 48,
+    distributionType: 'Cadena',
+    transmission: 'Manual',
+    initialOdometer: 12000,
+    currentOdometer: 21500,
+    vin: '8APBA1BE9N0128491',
+    bodyType: 'other',
+    has3dAnimation: false, // Vehículo con ficha 2D (sin modelo 3D)
+    bluetoothDeviceName: 'Fiat-Uconnect_912',
+    bluetoothDeviceId: 'bt-fiat-005',
+    createdAt: '2026-03-10T08:00:00.000Z',
   }
 ];
 
@@ -325,6 +364,8 @@ export const INITIAL_SERVICES: ServiceItem[] = [
   }
 ];
 
+export const SAMPLE_RECEIPT_SVG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="520" viewBox="0 0 400 520" fill="none"><rect width="400" height="520" rx="16" fill="%23FFFFFF"/><path d="M20 20H380V500H20V20Z" stroke="%23CBD5E1" stroke-width="2" stroke-dasharray="6 6"/><text x="40" y="65" font-family="Arial" font-size="18" font-weight="bold" fill="%230F172A">COMPROBANTE FISCAL OFICIAL</text><text x="40" y="88" font-family="Arial" font-size="12" fill="%2364748B">TALLER MECÁNICO Y LUBRICENTRO AUTORIZADO</text><line x1="40" y1="105" x2="360" y2="105" stroke="%2394A3B8" stroke-width="1.5"/><text x="40" y="135" font-family="Arial" font-size="13" font-weight="bold" fill="%231E293B">FACTURA: FAC-0004-0019283</text><text x="40" y="158" font-family="Arial" font-size="11" fill="%23475569">Fecha: 10/02/2026 · CUIT: 30-71492819-3</text><text x="40" y="180" font-family="Arial" font-size="11" fill="%23475569">Vehículo: Toyota Corolla 2.0 (AF 842 XP)</text><text x="40" y="202" font-family="Arial" font-size="11" fill="%23475569">Odómetro verificado: 8.200 km</text><rect x="40" y="225" width="320" height="160" rx="10" fill="%23F8FAFC" stroke="%23E2E8F0"/><text x="55" y="255" font-family="Arial" font-size="12" font-weight="bold" fill="%230F172A">Detalle de Trabajos y Repuestos:</text><text x="55" y="285" font-family="Arial" font-size="11" fill="%23334155">• Aceite Sintético 0W-20 (4.5 L) - $48.000</text><text x="55" y="315" font-family="Arial" font-size="11" fill="%23334155">• Filtro de Aceite original Denso - $16.000</text><text x="55" y="345" font-family="Arial" font-size="11" fill="%23334155">• Filtro de Aire Motor + Mano de Obra - $24.000</text><text x="210" y="420" font-family="Arial" font-size="17" font-weight="bold" fill="%230F172A">TOTAL: $88.000</text><rect x="40" y="445" width="180" height="34" rx="8" fill="%23ECFDF5" stroke="%2310B981"/><text x="52" y="467" font-family="Arial" font-size="11" font-weight="bold" fill="%23047857">✓ SERVICE CERTIFICADO</text></svg>';
+
 export const INITIAL_SERVICE_LOGS: ServiceLogRecord[] = [
   {
     id: 'slog-01',
@@ -336,7 +377,12 @@ export const INITIAL_SERVICE_LOGS: ServiceLogRecord[] = [
     cost: 88000,
     workshop: 'Lubricentro Box Rápido',
     invoiceNumber: 'FAC-0004-0019283',
-    notes: 'Filtro de aire y habitáculo cambiados preventivamente'
+    notes: 'Filtro de aire y habitáculo cambiados preventivamente',
+    receiptFileUrl: SAMPLE_RECEIPT_SVG,
+    receiptFileName: 'Factura_Service_8200km.svg',
+    partsDetail: 'Aceite sintético 0W-20 Denso, Filtro de aire, Filtro de cabina',
+    workshopCuit: '30-71492819-3',
+    verifiedForSale: true
   },
   {
     id: 'slog-02',
@@ -348,6 +394,102 @@ export const INITIAL_SERVICE_LOGS: ServiceLogRecord[] = [
     cost: 45000,
     workshop: 'Taller Especializado Frenos Centro',
     invoiceNumber: 'FAC-0001-0008472',
-    notes: 'Primer chequeo oficial de fluidos'
+    notes: 'Primer chequeo oficial de fluidos',
+    receiptFileUrl: SAMPLE_RECEIPT_SVG,
+    receiptFileName: 'Factura_Frenos_2000km.svg',
+    partsDetail: 'Líquido de frenos Bosch DOT 4',
+    workshopCuit: '30-68194012-7',
+    verifiedForSale: true
+  }
+];
+
+export const INITIAL_DAILY_TRIPS: DailyTripRecord[] = [
+  {
+    id: 'trip-01',
+    vehicleId: 'veh-001',
+    date: '2026-10-24',
+    startTime: '08:15',
+    endTime: '08:52',
+    distanceKm: 22.4,
+    durationMinutes: 37,
+    avgSpeedKmh: 36,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-02',
+    vehicleId: 'veh-001',
+    date: '2026-10-24',
+    startTime: '18:20',
+    endTime: '19:05',
+    distanceKm: 24.1,
+    durationMinutes: 45,
+    avgSpeedKmh: 32,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-03',
+    vehicleId: 'veh-001',
+    date: '2026-10-23',
+    startTime: '09:00',
+    endTime: '09:40',
+    distanceKm: 18.5,
+    durationMinutes: 40,
+    avgSpeedKmh: 28,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-04',
+    vehicleId: 'veh-001',
+    date: '2026-10-23',
+    startTime: '13:10',
+    endTime: '13:45',
+    distanceKm: 15.2,
+    durationMinutes: 35,
+    avgSpeedKmh: 26,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-05',
+    vehicleId: 'veh-001',
+    date: '2026-10-22',
+    startTime: '07:45',
+    endTime: '08:30',
+    distanceKm: 32.0,
+    durationMinutes: 45,
+    avgSpeedKmh: 43,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-06',
+    vehicleId: 'veh-001',
+    date: '2026-10-21',
+    startTime: '10:00',
+    endTime: '11:15',
+    distanceKm: 46.8,
+    durationMinutes: 75,
+    avgSpeedKmh: 37,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-07',
+    vehicleId: 'veh-001',
+    date: '2026-10-20',
+    startTime: '08:30',
+    endTime: '09:10',
+    distanceKm: 21.0,
+    durationMinutes: 40,
+    avgSpeedKmh: 31,
+    bluetoothDeviceName: 'Toyota-BT_4821'
+  },
+  {
+    id: 'trip-08',
+    vehicleId: 'veh-001',
+    date: '2026-10-19',
+    startTime: '14:00',
+    endTime: '15:20',
+    distanceKm: 52.4,
+    durationMinutes: 80,
+    avgSpeedKmh: 39,
+    bluetoothDeviceName: 'Toyota-BT_4821'
   }
 ];

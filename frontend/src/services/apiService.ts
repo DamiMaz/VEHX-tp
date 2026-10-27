@@ -23,6 +23,20 @@ export const api = {
     return (await res.json()) as ApiResponse<any>;
   },
 
+  async createVehicle(payload: any) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/vehicles`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return (await res.json()) as ApiResponse<any>;
+    } catch (err) {
+      console.warn('API backend offline, operando en almacenamiento local.');
+      return null;
+    }
+  },
+
   async getDashboardSummary(vehicleId: string) {
     const res = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}/dashboard`);
     return (await res.json()) as ApiResponse<any>;

@@ -19,5 +19,7 @@ public class Vehicle
     public int InitialOdometer { get; set; } // km
     public int CurrentOdometer { get; set; } // km de tablero
     public string? Vin { get; set; }
+    public string? BluetoothDeviceName { get; set; }
+    public bool Has3dAnimation { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -4,6 +4,7 @@ export type FuelType = 'Nafta Súper' | 'Nafta Premium' | 'Diésel' | 'GNC' | 'H
 export type TransmissionType = 'Manual' | 'Automática';
 export type DistributionType = 'Correa' | 'Cadena';
 export type RouteType = 'Ciudad' | 'Ruta' | 'Mixto';
+export type BodyType = 'sedan' | 'suv' | '4x4' | 'other';
 
 export interface Vehicle {
   id: string;
@@ -18,7 +19,28 @@ export interface Vehicle {
   currentOdometer: number; // km (odómetro real de tablero)
   transmission: TransmissionType;
   vin?: string;
+  bodyType?: BodyType;
+  model3dPath?: string;
+  has3dAnimation?: boolean; // Indica si cuenta con modelo/animación 3D o silueta 2D
+  bluetoothDeviceName?: string; // Nombre del dispositivo BT vinculado (ej. Toyota-BT-4821)
+  bluetoothDeviceId?: string; // ID / UUID de Bluetooth
   createdAt: string;
+}
+
+export interface CatalogVehicleModel {
+  id: string;
+  category: BodyType;
+  categoryLabel: string;
+  brand: string;
+  model: string;
+  defaultFuelType: FuelType;
+  defaultTankCapacity: number;
+  defaultDistributionType: DistributionType;
+  defaultTransmission: TransmissionType;
+  model3dFile: string;
+  model3dPath: string;
+  specsSummary: string;
+  description: string;
 }
 
 export interface FuelLog {
@@ -81,6 +103,32 @@ export interface ServiceLogRecord {
   workshop: string;
   invoiceNumber?: string;
   notes?: string;
+  receiptFileUrl?: string; // Comprobante o foto de la factura (Data URL / URL)
+  receiptFileName?: string;
+  partsDetail?: string; // Repuestos utilizados
+  workshopCuit?: string; // CUIT fiscal del taller
+  verifiedForSale?: boolean; // Sello de verificación para la venta
+}
+
+export interface DailyTripRecord {
+  id: string;
+  vehicleId: string;
+  date: string; // YYYY-MM-DD
+  startTime: string; // HH:mm
+  endTime: string; // HH:mm
+  distanceKm: number;
+  durationMinutes: number;
+  avgSpeedKmh: number;
+  bluetoothDeviceName?: string;
+}
+
+export interface DailyUsageSummary {
+  date: string; // YYYY-MM-DD
+  dayLabel: string; // "Hoy", "Ayer", "Lun 20", etc.
+  totalKm: number;
+  tripsCount: number;
+  totalDurationMinutes: number;
+  trips: DailyTripRecord[];
 }
 
 export interface MonthlyMatrixRow {

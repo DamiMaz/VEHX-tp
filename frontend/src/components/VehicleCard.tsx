@@ -17,7 +17,7 @@ export const VehicleCard: React.FC = () => {
   return (
     <div 
       onClick={() => setActiveTab('garage')}
-      className="mx-4 mb-4 p-4 rounded-card bg-carbon border border-tea/60 hover:border-amber-autumn/60 shadow-card pressable-card cursor-pointer transition-all group"
+      className="w-full h-full p-4 rounded-card bg-carbon border border-tea/60 hover:border-amber-autumn/60 shadow-card pressable-card cursor-pointer transition-all group flex flex-col justify-between"
       title={t('garageCardAccessPrompt')}
     >
       {/* Encabezado de la Tarjeta de Acceso al Garaje */}

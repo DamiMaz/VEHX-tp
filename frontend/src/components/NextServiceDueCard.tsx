@@ -25,7 +25,7 @@ export const NextServiceDueCard: React.FC = () => {
   };
 
   return (
-    <div className="mx-4 mb-4 p-4 rounded-card bg-carbon border border-tea/60 shadow-card select-none">
+    <div className="w-full h-full p-4 rounded-card bg-carbon border border-tea/60 shadow-card select-none flex flex-col justify-between">
       {/* Cabecera de la Tarjeta */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">

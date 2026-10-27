@@ -15,4 +15,6 @@ public class ServiceLogRecord
     public string Workshop { get; set; } = string.Empty;
     public string? InvoiceNumber { get; set; }
     public string? Notes { get; set; }
+    public string? ReceiptFileUrl { get; set; }
+    public string? PartsDetail { get; set; }
 }

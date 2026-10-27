@@ -9,6 +9,8 @@ import { GarageView } from './components/GarageView';
 import { SimulatorFrame } from './components/SimulatorFrame';
 import { AddFuelModal } from './components/AddFuelModal';
 import { PerformServiceModal } from './components/PerformServiceModal';
+import { DailyTripsFloatingButton } from './components/DailyTripsFloatingButton';
+import { DailyTripsFloatingModal } from './components/DailyTripsFloatingModal';
 
 const AppContent: React.FC = () => {
   const { activeTab } = useVehicle();
@@ -35,6 +37,10 @@ const AppContent: React.FC = () => {
       <SimulatorFrame>
         {renderActiveView()}
       </SimulatorFrame>
+
+      {/* Botón Flotante y Modal de Telemetría Diaria / Podómetro Vehicular */}
+      <DailyTripsFloatingButton />
+      <DailyTripsFloatingModal />
 
       {/* Modales Globales */}
       <AddFuelModal />

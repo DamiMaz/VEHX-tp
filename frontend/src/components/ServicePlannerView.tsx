@@ -9,9 +9,16 @@ import {
   Calendar, 
   Gauge, 
   History, 
-  Clock
+  Clock,
+  Plus,
+  CreditCard,
+  Trash2,
+  FileText,
+  Eye
 } from 'lucide-react';
 import { ServiceItem } from '../types/vehicle';
+import { AddServiceFromCatalogModal } from './AddServiceFromCatalogModal';
+import { ServiceWalletModal } from './ServiceWalletModal';
 
 export const ServicePlannerView: React.FC = () => {
   const { 
@@ -19,7 +26,10 @@ export const ServicePlannerView: React.FC = () => {
     serviceHistory, 
     dailyRhythmKm,
     setSelectedServiceForModal,
-    setIsPerformServiceModalOpen 
+    setIsPerformServiceModalOpen,
+    setIsServiceWalletModalOpen,
+    setIsAddServiceFromCatalogModalOpen,
+    deleteServiceItem
   } = useVehicle();
   const { t } = useLanguage();
 
@@ -37,77 +47,109 @@ export const ServicePlannerView: React.FC = () => {
     setIsPerformServiceModalOpen(true);
   };
 
+  const handleDeleteService = (e: React.MouseEvent, serviceId: string, serviceName: string) => {
+    e.stopPropagation();
+    if (window.confirm(`¿Deseas remover "${serviceName}" del plan de mantenimientos?`)) {
+      deleteServiceItem(serviceId);
+    }
+  };
+
   return (
-    <div className="p-3 sm:p-5 space-y-4 max-w-7xl mx-auto select-none">
-      {/* Encabezado */}
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 space-y-4 select-none">
+      {/* Encabezado y Acciones Principales */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-extrabold text-amber-autumn uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] font-extrabold text-amber-autumn uppercase tracking-wider">
               {t('serviceSectionBadge')}
             </span>
-            <span className="text-[10px] bg-carbon px-2 py-0.5 rounded-full border border-tea/50 text-text-secondary">
-              {t('serviceSectionSub')}
+            <span className="text-[9px] text-tea">•</span>
+            <span className="text-[9px] bg-carbon px-2 py-0.5 rounded-full border border-tea/50 text-text-secondary font-mono">
+              CATÁLOGO DE SERVICIOS (service_list.txt)
             </span>
           </div>
-          <h1 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight mt-0.5">
             {t('serviceTitle')}
           </h1>
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-xs sm:text-sm text-text-secondary mt-0.5">
             {t('serviceSubtitle')}
           </p>
         </div>
 
-        {/* Banner de Ritmo Diario de Uso */}
-        <div className="p-2.5 rounded-2xl bg-carbon border border-tea/60 flex items-center gap-2.5 w-fit">
+        {/* Botones de Acción: Billetera Virtual + Agregar de Catálogo */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsServiceWalletModalOpen(true)}
+            className="flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-carbon border border-amber-autumn/60 hover:bg-river text-amber-autumn font-extrabold text-xs transition-all shadow-sm whitespace-nowrap"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>Billetera Virtual & Venta</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsAddServiceFromCatalogModalOpen(true)}
+            className="flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-amber-autumn text-river font-extrabold text-xs hover:brightness-110 shadow-amber-glow transition-all whitespace-nowrap"
+          >
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>+ Agregar desde Catálogo</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Banner de Ritmo y Filtros */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Filtros de Estado */}
+        <div className="grid grid-cols-3 gap-2 w-full sm:max-w-md text-xs">
+          <button
+            onClick={() => setFilter('all')}
+            className={`py-2 px-3 rounded-xl font-bold transition-all text-xs text-center truncate ${
+              filter === 'all'
+                ? 'bg-amber-autumn text-river font-extrabold shadow-sm'
+                : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
+            }`}
+          >
+            {t('filterAll')} ({services.length})
+          </button>
+          <button
+            onClick={() => setFilter('warning')}
+            className={`py-2 px-3 rounded-xl font-bold transition-all text-xs text-center truncate ${
+              filter === 'warning'
+                ? 'bg-amber-autumn text-river font-extrabold shadow-sm'
+                : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
+            }`}
+          >
+            {t('filterWarning')} ({services.filter(s => s.status === 'warning').length})
+          </button>
+          <button
+            onClick={() => setFilter('overdue')}
+            className={`py-2 px-3 rounded-xl font-bold transition-all text-xs text-center truncate ${
+              filter === 'overdue'
+                ? 'bg-amber-autumn text-river font-extrabold shadow-sm'
+                : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
+            }`}
+          >
+            {t('filterOverdue')} ({services.filter(s => s.status === 'overdue').length})
+          </button>
+        </div>
+
+        {/* Indicador de Ritmo Diario */}
+        <div className="p-2 sm:p-2.5 rounded-2xl bg-carbon border border-tea/60 flex items-center gap-2.5 shrink-0 w-fit">
           <div className="w-8 h-8 rounded-xl bg-wood/20 border border-wood/40 flex items-center justify-center">
             <Gauge className="w-4 h-4 text-wood" />
           </div>
           <div>
-            <span className="text-[9px] text-text-secondary font-semibold uppercase">{t('telemetryRhythm')}</span>
-            <div className="text-xs font-extrabold text-text-primary">
-              {dailyRhythmKm} <span className="text-[10px] font-normal text-amber-autumn">{t('kmPerDay')}</span>
+            <span className="text-[9px] text-text-secondary font-semibold uppercase block leading-none">{t('telemetryRhythm')}</span>
+            <div className="text-xs font-extrabold text-text-primary mt-1 leading-none">
+              {dailyRhythmKm} <span className="text-[9px] font-normal text-amber-autumn">{t('kmPerDay')}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filtros de Estado */}
-      <div className="flex gap-1.5 text-xs">
-        <button
-          onClick={() => setFilter('all')}
-          className={`px-3 py-1 rounded-xl font-bold transition-all text-xs ${
-            filter === 'all'
-              ? 'bg-amber-autumn text-river font-extrabold'
-              : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
-          }`}
-        >
-          {t('filterAll')} ({services.length})
-        </button>
-        <button
-          onClick={() => setFilter('warning')}
-          className={`px-3 py-1 rounded-xl font-bold transition-all text-xs ${
-            filter === 'warning'
-              ? 'bg-amber-autumn text-river font-extrabold'
-              : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
-          }`}
-        >
-          {t('filterWarning')} ({services.filter(s => s.status === 'warning').length})
-        </button>
-        <button
-          onClick={() => setFilter('overdue')}
-          className={`px-3 py-1 rounded-xl font-bold transition-all text-xs ${
-            filter === 'overdue'
-              ? 'bg-amber-autumn text-river font-extrabold'
-              : 'bg-carbon text-text-secondary hover:text-text-primary border border-tea/40'
-          }`}
-        >
-          {t('filterOverdue')} ({services.filter(s => s.status === 'overdue').length})
-        </button>
-      </div>
-
       {/* Grid de Tarjetas de Services */}
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredServices.map((item) => {
           const isOverdue = item.status === 'overdue';
           const isWarning = item.status === 'warning';
@@ -126,9 +168,19 @@ export const ServicePlannerView: React.FC = () => {
               <div>
                 {/* Cabecera del Item */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary">
-                    {item.category}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+                      {item.category}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => handleDeleteService(e, item.id, item.name)}
+                      className="p-1 rounded-lg text-text-secondary hover:text-red-400 opacity-60 hover:opacity-100 transition-opacity"
+                      title="Remover service del plan"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
 
                   {isOverdue ? (
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-900/30 px-2 py-0.5 rounded-full border border-red-500/40">
@@ -151,7 +203,7 @@ export const ServicePlannerView: React.FC = () => {
                 <h3 className="text-sm font-extrabold text-text-primary mb-1">
                   {item.name}
                 </h3>
-                <p className="text-xs text-text-secondary mb-3">
+                <p className="text-xs text-text-secondary mb-3 line-clamp-2">
                   {item.notes}
                 </p>
 
@@ -217,26 +269,36 @@ export const ServicePlannerView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Botón Registrar Service Realizado */}
+              {/* Botón Registrar Service Realizado con Comprobante */}
               <button
                 onClick={() => handleOpenServiceModal(item)}
-                className="w-full py-2 px-3 rounded-xl bg-carbon hover:bg-amber-autumn border border-amber-autumn text-amber-autumn hover:text-river font-bold text-xs transition-all flex items-center justify-center gap-1.5 pressable-card"
+                className="w-full py-2 px-3 rounded-xl bg-carbon hover:bg-amber-autumn border border-amber-autumn text-amber-autumn hover:text-river font-bold text-xs transition-all flex items-center justify-center gap-1.5 pressable-card shadow-sm"
               >
                 <Wrench className="w-3.5 h-3.5" />
-                <span>{t('performServiceAction')}</span>
+                <span>Registrar Service & Adjuntar Factura</span>
               </button>
             </div>
           );
         })}
       </div>
 
-      {/* Bitácora Clínica de Talleres */}
-      <div className="rounded-2xl bg-carbon border border-tea/60 p-3.5 shadow-card">
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-tea/40">
-          <History className="w-4 h-4 text-amber-autumn" />
-          <h2 className="text-xs font-bold text-text-primary uppercase tracking-wide">
-            {t('serviceHistoryTitle')}
-          </h2>
+      {/* Bitácora Clínica de Talleres & Comprobantes */}
+      <div className="rounded-2xl bg-carbon border border-tea/60 p-3.5 shadow-card space-y-3">
+        <div className="flex items-center justify-between pb-2 border-b border-tea/40">
+          <div className="flex items-center gap-2">
+            <History className="w-4 h-4 text-amber-autumn" />
+            <h2 className="text-xs font-bold text-text-primary uppercase tracking-wide">
+              {t('serviceHistoryTitle')} ({serviceHistory.length})
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsServiceWalletModalOpen(true)}
+            className="flex items-center gap-1 text-[11px] font-bold text-amber-autumn hover:underline"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>Ver Billetera de Facturas</span>
+          </button>
         </div>
 
         {serviceHistory.length === 0 ? (
@@ -245,7 +307,7 @@ export const ServicePlannerView: React.FC = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs min-w-[440px]">
+            <table className="w-full text-left border-collapse text-xs min-w-[500px]">
               <thead>
                 <tr className="border-b border-tea/50 text-[10px] uppercase tracking-wider text-text-secondary">
                   <th className="py-2 px-2.5 font-bold">{t('dateLabel')}</th>
@@ -253,12 +315,13 @@ export const ServicePlannerView: React.FC = () => {
                   <th className="py-2 px-2.5 font-bold">Km</th>
                   <th className="py-2 px-2.5 font-bold">Costo ($)</th>
                   <th className="py-2 px-2.5 font-bold">{t('workshopLabel')}</th>
+                  <th className="py-2 px-2.5 font-bold">Comprobante</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-tea/30 font-medium text-xs">
                 {serviceHistory.map((slog) => (
                   <tr key={slog.id} className="hover:bg-river/40">
-                    <td className="py-2.5 px-2.5 text-text-primary text-[11px]">
+                    <td className="py-2.5 px-2.5 text-text-primary text-[11px] font-mono">
                       {slog.date}
                     </td>
                     <td className="py-2.5 px-2.5 font-bold text-amber-autumn text-xs">
@@ -273,6 +336,20 @@ export const ServicePlannerView: React.FC = () => {
                     <td className="py-2.5 px-2.5 text-text-secondary text-[11px]">
                       {slog.workshop}
                     </td>
+                    <td className="py-2.5 px-2.5">
+                      {slog.receiptFileUrl ? (
+                        <button
+                          type="button"
+                          onClick={() => setIsServiceWalletModalOpen(true)}
+                          className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-500/40 hover:bg-emerald-900/50 transition-colors"
+                        >
+                          <FileText className="w-3 h-3" />
+                          <span>{slog.invoiceNumber || 'Factura'}</span>
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-text-secondary font-mono">Sin comprobante</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -280,6 +357,10 @@ export const ServicePlannerView: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modales Secundarios Integrados */}
+      <AddServiceFromCatalogModal />
+      <ServiceWalletModal />
     </div>
   );
 };
